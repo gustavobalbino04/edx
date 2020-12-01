@@ -11,9 +11,9 @@ const Stack = createStackNavigator();
 export default function App() {
    return(
 
-     <NavigationContainer>
+     <NavigationContainer  style={styles.menu}>
       <Stack.Navigator  >
-        <Stack.Screen style={styles.menu} name="Dicas" component={Dicas} />
+        <Stack.Screen  name="EduX" component={Dicas} />
        
       </Stack.Navigator>
     </NavigationContainer>
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   menu: {
-    backgroundColor: 'purple',
+    backgroundColor: '#9D0DCA',
   }
+
 });
