@@ -1,5 +1,8 @@
 import React, { useState, useEffect, }from 'react';
-import {StyleSheet, Text, View,FlatList,TouchableOpacity,TextInput,Form, Button,Image} from 'react-native';
+import {StyleSheet, Text, View,FlatList,TouchableOpacity,TextInput,Form, Button,Image, Platform, TouchableHighlight} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const Dicas = () => {
@@ -7,12 +10,37 @@ const Dicas = () => {
     const [texto, setTexto] = useState([]);
     const [urlImagem, setUrlImagem] = useState('');
     const[id,setId] = useState(' ');
+    const [count, setCount] = useState(0);
     const onPress = () => setCount(count + 1);
+    
 
 
     useEffect(()=>{
         Listar();
+        (async () => {
+            if (Platform.OS !== 'web') {
+              const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+              if (status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+              }
+            }
+          })();
     }, [])
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+          setUrlImagem(result.uri);
+        }
+      };
 
     const Listar = () =>{
         fetch( 'https://5f9a074d9d94640016f70531.mockapi.io/api/dicas',{
@@ -98,14 +126,17 @@ const Dicas = () => {
                 placeholderTextColor: "#9D0DCA",  
                 borderColor: '#9D0DCA', 
                 borderWidth: 3,
-                width: '90%',
-                marginLeft: '5%',
+                width: '96%',
+                marginLeft: '2%',
                 borderRadius: '10px',
                 }}
             onChangeText={text => onChangeText(text)} placeholder = "  Digite aqui o seu comentario "
-            value={texto}
+            value={setTexto}
             />
-            
+            <View style={styles.button} style={{backgroundColor: 'green', marginTop:"20px"}}>
+                <Button title="Adicione a foto" onPress={pickImage} />
+                {Image && <Image source={{ uri: urlImagem }} style={{ width: 200, height: 200, borderRadius: '10px' }} />}
+                </View>
             <TouchableOpacity style={styles.button}  onPress={delatar}><Text style={{color: 'white',display: 'flex',justifyContent: "center",}}>Salvar</Text></TouchableOpacity>
             
             
@@ -121,11 +152,11 @@ const Dicas = () => {
                   <Text style={styles.cardText}>Para dominar bem as linguagens de programação dos games, conhecer bem e saber implementar as lógicas de programação, é preciso dominar o inglês. Pois, como falamos, o material disponível em português é bastante escasso.</Text>
                   <View style={styles.display}>
 
-                    <TouchableOpacity style={styles.button}  onPress={delatar}><Text style={{color: 'white',display: 'flex',  justifyContent: 'center',}}>Deletar</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.button}   onPress={delatar}><Text style={{color: 'white',display: 'flex',  justifyContent: 'center',}}>Deletar</Text></TouchableOpacity>
                     <TouchableOpacity style={styles.button}  onPress={editar}><Text style={{color: 'white',display: 'flex',  justifyContent: 'center',}}>Editar</Text></TouchableOpacity>
-                    <TouchableHighlight onPress={onPress}>
-                        <View style={styles.button}>
-                        <Text>Touch Here</Text>
+                    <TouchableHighlight onPress={onPress} style={{marginTop:"6px"}}>
+                        <View >
+                        <Icon name="heart" size={30} color="#999" />
                         </View>
                     </TouchableHighlight>
                     <View style={styles.countContainer}>
@@ -136,11 +167,6 @@ const Dicas = () => {
                   </View>
                 </TouchableOpacity>
                 
-                
-
-            
-            
-        
             
         </View>
     )
@@ -197,6 +223,7 @@ const styles = StyleSheet.create({
     },
     display:{
         flex: 1,
+       // flexDirection: 'row',
         justifyContent: 'space-between',
 
     }

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import Dicas from './Pages/Dicas';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -11,9 +11,20 @@ const Stack = createStackNavigator();
 export default function App() {
    return(
 
-     <NavigationContainer  style={styles.menu}>
+     <NavigationContainer  >
       <Stack.Navigator  >
-        <Stack.Screen  name="EduX" component={Dicas} />
+        <Stack.Screen  name="EduX" component={Dicas} 
+            options={{
+              title: 'EduX',
+              headerStyle: {
+                backgroundColor: '#9D0DCA',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+        />
        
       </Stack.Navigator>
     </NavigationContainer>
