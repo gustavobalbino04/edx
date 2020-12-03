@@ -6,15 +6,18 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const Dicas = () => {
+    //setando os dados 
     const [dicas, setDicas] = useState([]);
     const [texto, setTexto] = useState([]);
     const [urlImagem, setUrlImagem] = useState('');
-    const[id,setId] = useState(' ');
+    const [id,  setId] = useState(' ');
     const [count, setCount] = useState(0);
     const onPress = () => setCount(count + 1);
     
 
+//Metodos da pagina
 
+    
     useEffect(()=>{
         Listar();
         (async () => {
@@ -43,7 +46,7 @@ const Dicas = () => {
       };
 
     const Listar = () =>{
-        fetch( 'https://5f9a074d9d94640016f70531.mockapi.io/api/dicas',{
+        fetch( '',{
             method : 'GET'
         })
         .then(response => response.json())
@@ -78,7 +81,7 @@ const Dicas = () => {
     }
     const editar = (event) =>{
         
-        fetch(`${url}/eventos/${event.target.value}`, {
+        fetch(`${url}//${event.target.value}`, {
             method : 'GET'
         })
         .then(response => response.json())
@@ -89,8 +92,7 @@ const Dicas = () => {
             setUrlImagem(dado.data.urlImagem);
         })
     }
-    const salvar = (event) => {
-        event.preventDefault();
+    const salvar = () => {
 
         const evento = {
             texto : texto,
@@ -99,7 +101,7 @@ const Dicas = () => {
 
         }
         let method = (id === 0 ? 'POST' : 'PUT');
-        let urlRequest = (id === 0 ? `${url}/eventos` : `${url}/eventos/${id}`);
+        let urlRequest = (id === 0 ? `${url}/` : `${url}//${id}`);
 
         fetch(urlRequest, {
             method : method,
@@ -117,7 +119,7 @@ const Dicas = () => {
         })
         .catch(err => console.error(err))
     }
-
+//retorno da pagina 
     return(
         <View style={styles.container}>
             <Text style={styles.titulo}>POSTAGENS</Text>
@@ -126,18 +128,36 @@ const Dicas = () => {
                 placeholderTextColor: "#9D0DCA",  
                 borderColor: '#9D0DCA', 
                 borderWidth: 3,
-                width: '96%',
-                marginLeft: '2%',
-                borderRadius: '10px',
+                width: '100%',
+                marginLeft: '0%',
+                borderRadius: '7px',
+                outline:'none',
                 }}
-            onChangeText={text => onChangeText(text)} placeholder = "  Digite aqui o seu comentario "
-            value={setTexto}
+            onChangeText={text => setTexto(text)} placeholder = "  Digite aqui o seu comentario "
+            value={texto}
             />
-            <View style={styles.button} style={{backgroundColor: 'green', marginTop:"20px"}}>
-                <Button title="Adicione a foto" onPress={pickImage} />
-                {Image && <Image source={{ uri: urlImagem }} style={{ width: 200, height: 200, borderRadius: '10px' }} />}
+            
+
+            <View  style={{ marginTop:"10px"}}>
+                <Button title="Adicione a foto" onPress={pickImage}  style={{borderRadius: '30px' }} />
+                {urlImagem && <Image source={{ uri: urlImagem }} style={{  width: "80%", height: 200, borderRadius: '10px' }} />}
                 </View>
-            <TouchableOpacity style={styles.button}  onPress={delatar}><Text style={{color: 'white',display: 'flex',justifyContent: "center",}}>Salvar</Text></TouchableOpacity>
+            <TouchableOpacity style={{
+                backgroundColor: 'green',
+                marginTop: '10px',
+                color: 'white',
+                width: '100%',
+                height: '30px',
+                marginLeft: "0%",
+                borderRadius: '4px',
+                padding: "5px"
+                
+            }}  onPress={salvar}><Text style={{
+                color: 'white',
+                display: 'flex',
+                justifyContent: "center",
+            }}>Salvar</Text></TouchableOpacity>
+            
             
             
             <FlatList 
@@ -146,32 +166,49 @@ const Dicas = () => {
                 renderItem={renderItem}
                 />
                 
+                <View style={{marginTop: "50px"}}>
 
                 <TouchableOpacity style={styles.card}>
                   <Image style={styles.cardImage} source={{uri:'https://s3-sa-east-1.amazonaws.com/sensediafiles/marketing/newsletter/2015/09set/SENSEDIA-gamification-apis-600.jpg'}}/>
-                  <Text style={styles.cardText}>Para dominar bem as linguagens de programação dos games, conhecer bem e saber implementar as lógicas de programação, é preciso dominar o inglês. Pois, como falamos, o material disponível em português é bastante escasso.</Text>
+                  <Text style={styles.cardText}>Para dominar bem as linguagens de programação dos games, conhecer bem e saber implementar as lógicas de programação, é preciso dominar o inglês. Pois, como falamos, o material disponível em português é bastante escasso.
+                  </Text>
                   <View style={styles.display}>
 
-                    <TouchableOpacity style={styles.button}   onPress={delatar}><Text style={{color: 'white',display: 'flex',  justifyContent: 'center',}}>Deletar</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.button}  onPress={editar}><Text style={{color: 'white',display: 'flex',  justifyContent: 'center',}}>Editar</Text></TouchableOpacity>
-                    <TouchableHighlight onPress={onPress} style={{marginTop:"6px"}}>
+                    <TouchableOpacity style={styles.button}   onPress={delatar}><Text style={{
+                        color: 'white',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>Deletar</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.button}  onPress={editar}><Text style={{
+                        color: 'white',
+                        display: 'flex', 
+                        justifyContent: 'center',
+                    }}>Editar</Text></TouchableOpacity>
+                        </View>
+                        <View style={styles.display}>
+
+                    <TouchableHighlight onPress={onPress} style={{marginTop:"15px"}}>
                         <View >
-                        <Icon name="heart" size={30} color="#999" />
+                        <Icon name="heart" size={30} width={'20%'} color="#00C2EE" style={{marginLeft:"10px"}}/>
                         </View>
                     </TouchableHighlight>
                     <View style={styles.countContainer}>
-                        <Text style={styles.countText}>
+                        <Text style={{fontFamily: "Andale Mono, monospace", 
+                            fontSize: '20px',
+                            fontWeight: 'bold',
+                            marginTop: "18px",
+                            color: "#00C2EE",}}>
                         {count ? count : null}
                         </Text>
                     </View>
-                  </View>
+                        </View>
                 </TouchableOpacity>
-                
-            
+                </View>
         </View>
     )
 
 }
+//Css do pagina
 const styles = StyleSheet.create({
 
     container: {
@@ -182,11 +219,11 @@ const styles = StyleSheet.create({
       },
     button: {
         backgroundColor: 'green',
-        marginTop: 15,
+        marginTop: '15px',
         color: 'white',
-        width: '90%',
+        width: '45%',
         height: '25px',
-        marginLeft: "5%",
+        marginLeft: "3%",
         borderRadius: '10px',
         
     },
@@ -223,10 +260,11 @@ const styles = StyleSheet.create({
     },
     display:{
         flex: 1,
-       // flexDirection: 'row',
+        flexDirection: 'row',
         justifyContent: 'space-between',
 
-    }
+    },
+  
 
     
   });
